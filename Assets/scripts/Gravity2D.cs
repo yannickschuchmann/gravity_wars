@@ -27,11 +27,16 @@ public class Gravity2D : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		foreach (Transform child in WorldObjectsHolder.transform) {
-			//WorldObjects.Add(child.gameObject);
-			this.PerformGravity(child.gameObject);
+		this.IterateObjects(WorldObjectsHolder.transform);
+	}
+
+	void IterateObjects(Transform objsHolder) {
+		foreach (Transform child in objsHolder.transform) {
+			if (child.GetComponent<Rigidbody2D>()) this.PerformGravity(child.gameObject);
+			this.IterateObjects(child.transform);
 		}
 	}
+
 
 	void PerformGravity(GameObject obj) {
 		Vector2 direction = transform.position - obj.transform.position;

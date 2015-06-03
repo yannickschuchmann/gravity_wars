@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CharacterMovement : MonoBehaviour {
+public class Character : MonoBehaviour {
+
+	public int hp = 100;
+	private bool active = false;
 
 	public float acceleration = 100f;
 	public float jumpPower = 200f;
@@ -27,6 +30,9 @@ public class CharacterMovement : MonoBehaviour {
 
 		//trajectory = transform.Find("trajectory").gameObject;
 
+	}
+
+	void InstatiateCrossHair() {
 		crossHair = Instantiate(crossHairPrefab, Vector3.zero, Quaternion.identity) as GameObject;
 		crossHair.transform.parent = transform;
 		crossHair.transform.localPosition = new Vector3(2.0f, 0, 0);
@@ -34,6 +40,7 @@ public class CharacterMovement : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
+		if (!this.active) return;
 
 		// get input and limit to maxSpeed
 		float move = Input.GetAxis("Horizontal") * acceleration;
@@ -74,6 +81,16 @@ public class CharacterMovement : MonoBehaviour {
 		GameObject camera = GameObject.Find("Main Camera");
 		camera.transform.position = new Vector3(transform.position.x, transform.position.y, camera.transform.position.z);
 
+	}
+
+	public void SetActive() {
+		this.active = true;
+		this.InstatiateCrossHair();
+	}
+
+	public void SetInactive() {
+		this.active = false;
+		Destroy(crossHair);
 	}
 
 	void drawFlightPath(Vector2 startPos, Vector2 startVelocity) {
