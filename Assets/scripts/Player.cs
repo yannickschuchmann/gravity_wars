@@ -34,9 +34,11 @@ public class Player : MonoBehaviour {
 
 	public void SetInactive() {
 		this.active = false;
-		foreach(Character character in Characters) {
-			character.SetInactive();
-		}
+		Character activeCharacter = (Character) Characters[activeCharacterIndex];
+		activeCharacter.SetInactive();
+		activeCharacterIndex = (activeCharacterIndex + 1 >= Characters.Count) 
+			? 0 
+			: activeCharacterIndex + 1;
 	}
 
 	// Update is called once per frame
