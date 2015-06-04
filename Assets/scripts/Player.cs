@@ -7,6 +7,8 @@ public class Player : MonoBehaviour {
 	public int index;
 	public bool active = false;
 
+	private bool isInitialized = false;
+
 	private ArrayList Characters = new ArrayList();
 	private int activeCharacterIndex = 0;
 
@@ -15,6 +17,7 @@ public class Player : MonoBehaviour {
 		foreach(Transform child in transform) {
 			Characters.Add(child.GetComponent<Character>());
 		}
+		this.isInitialized = true;
 	}
 
 	public int CountCharacters() {
@@ -22,10 +25,11 @@ public class Player : MonoBehaviour {
 	}
 
 	public bool Alive() {
-		return this.CountCharacters() > 0;
+		return this.CountCharacters() > 0 && this.isInitialized;
 	}
 
 	public void SetActive() {
+		if (Characters.Count <= 0) return;
 		this.active = true;
 		Character activeCharacter = (Character) Characters[activeCharacterIndex];
 		activeCharacter.SetActive();
