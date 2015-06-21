@@ -50,12 +50,17 @@ public class StartMenu : MonoBehaviour {
 	}
 
 	public void OnNextPressed() {
-		// add player to GameProperties
+		addPlayerToGameProperties(playerOneCanvas);
 		switchCanvas(playerTwoCanvas);
+	}
 
+	private void addPlayerToGameProperties(Canvas playerCanvas) {
+		InputField inputName = (InputField) playerCanvas.transform.Find("InputName").GetComponent<InputField>();
+		GameProperties.PlayerModels.Add(new PlayerModel(inputName.text, 0));
 	}
 
 	public void OnPlayPressed() {
+		addPlayerToGameProperties(playerTwoCanvas);
 		Application.LoadLevel(1);
 	}
 

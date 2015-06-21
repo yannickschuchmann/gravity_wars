@@ -6,24 +6,76 @@ public class TurnBased : MonoBehaviour {
 	public int turnSeconds = 5;
 	public GUIStyle countdownStyle = new GUIStyle();
 	public GUIStyle turnStyle = new GUIStyle();
+	public GameObject playerPrefab;
+
+	public GameObject racePrefab0;
+	public GameObject racePrefab1;
+	public GameObject racePrefab2;
+
 
 	private ArrayList Players = new ArrayList();
 	private int turnIndex = 0;
 	public bool turnActive = false;
 	private bool gameOver = false;
-	private int activePlayerIndex = 1; // set this random on initialization 
+	private int activePlayerIndex = 0; // set this random on initialization 
 	private int countdown;
 	private int turn;
 
 	// Use this for initialization
 	void Start () {
-		foreach(Transform child in transform) {
-			Players.Add(child.gameObject.GetComponent<Player>());
+		if (GameProperties.PlayerModels.Count == 0) {
+			GameProperties.PlayerModels.Add(new PlayerModel("Markus", 0));
+			GameProperties.PlayerModels.Add(new PlayerModel("Bertha", 0	));
 		}
+
+		SpawnPlayers();
+
 
 		this.NextTurn();
 	}
 
+	void SpawnPlayers() {
+		foreach(PlayerModel pl in GameProperties.PlayerModels) {
+			GameObject player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+			player.transform.parent = transform;
+			player.transform.localPosition = new Vector3(2.0f, 0, 0);
+			Player playerScript = player.GetComponent<Player>();
+			playerScript.playerName = pl.getName();
+			playerScript.race = pl.getRace();
+			Players.Add(playerScript);
+			
+			SpawnCharacters(player);
+		}
+	}
+
+	void SpawnCharacters(GameObject player) {
+		Player playerScript = player.GetComponent<Player>();
+		for(int i = 0; i < GameProperties.AmountCharacters; i++) {
+			GameObject prefab;
+			switch(playerScript.race)
+			{
+			case 0:
+				prefab = racePrefab0;
+				break;
+			case 1:
+				prefab = racePrefab1;
+				break;
+			case 2:
+				prefab = racePrefab2;
+				break;
+			default:
+				prefab = racePrefab0;
+				break;
+			}
+			GameObject character = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
+			character.transform.parent = player.transform;
+			
+			character.transform.position = new Vector3(12.0f + (float) i, -7.0f, 0);
+			Character characterScript = character.GetComponent<Character>();
+			playerScript.Characters.Add(characterScript);
+		}
+	}
+	
 	int CountAlive() {
 		int sum = 0;
 		foreach (Player player in Players) {
