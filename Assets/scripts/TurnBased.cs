@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class TurnBased : MonoBehaviour {
 	public int countdownSeconds = 3;
 	public int turnSeconds = 5;
-	public GUIStyle countdownStyle = new GUIStyle();
-	public GUIStyle turnStyle = new GUIStyle();
+	public Text countDownText;
+	public Text timeOfTurn;
+	public Text readyText;
 	public GameObject playerPrefab;
 
 	public GameObject racePrefab0;
@@ -156,10 +158,16 @@ public class TurnBased : MonoBehaviour {
 	// timer
 	void OnGUI() {
 		if (countdown > 0) {
-			GUI.Label(new Rect(Screen.width/2-200,Screen.height/2-45,400,90), countdown.ToString(), countdownStyle);
+			timeOfTurn.enabled = false;
+			countDownText.enabled = true;
+			readyText.enabled = true;
+			countDownText.text = countdown.ToString();
 		}
 		if (turn > 0) {
-			GUI.Label(new Rect(Screen.width-410,Screen.height-90,400,90), turn.ToString(), turnStyle);
+			timeOfTurn.enabled = true;
+			countDownText.enabled = false;
+			readyText.enabled = false;
+			timeOfTurn.text = turn.ToString();
 		}
 	}	
 
