@@ -21,15 +21,17 @@ public class TurnBased : MonoBehaviour {
 	private int countdown;
 	private int turn;
 
+	private GameObject[] planets;
+
 	// Use this for initialization
 	void Start () {
 		if (GameProperties.PlayerModels.Count == 0) {
 			GameProperties.PlayerModels.Add(new PlayerModel("Markus", 0));
 			GameProperties.PlayerModels.Add(new PlayerModel("Bertha", 0	));
 		}
+		planets = GameObject.FindGameObjectsWithTag("Planet");
 
 		SpawnPlayers();
-
 
 		this.NextTurn();
 	}
@@ -69,11 +71,26 @@ public class TurnBased : MonoBehaviour {
 			}
 			GameObject character = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
 			character.transform.parent = player.transform;
-			
-			character.transform.position = new Vector3(12.0f + (float) i, -7.0f, 0);
+
+			int randomPlanet = Random.Range(0, planets.Length);
+
+			Vector3 positionOnPlanet = getRandomPlanetPosition(planets[randomPlanet]);
+
+			character.transform.position = planets[randomPlanet].transform.position + positionOnPlanet;
 			Character characterScript = character.GetComponent<Character>();
 			playerScript.Characters.Add(characterScript);
 		}
+	}
+
+	Vector3 getRandomPlanetPosition(GameObject planet) {
+		float radius = planet.GetComponent<Gravity2D>().GravityDistance - 1;
+		float xValue = Random.Range(-radius, radius);
+
+		float negaPosi = (Random.Range(0, 2) < 1) ? -1 : 1;
+
+		float yValue = negaPosi * Mathf.Sqrt(Mathf.Pow(radius, 2) - Mathf.Pow(xValue, 2));
+
+		return new Vector3(xValue, yValue, 0);
 	}
 	
 	int CountAlive() {
