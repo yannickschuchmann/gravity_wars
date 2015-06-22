@@ -46,7 +46,6 @@ public class GameGUI : MonoBehaviour {
 		Text name = elTransform.FindChild("Name").GetComponent<Text>();
 		Image lifebar = elTransform.FindChild("Lifebar").GetComponent<Image>();
 
-		Debug.Log (GameProperties.playerColors[index]);
 		name.color = GameProperties.playerColors[index];
 		name.text = pl.getName();
 		lifebar.color = GameProperties.playerColors[index];
