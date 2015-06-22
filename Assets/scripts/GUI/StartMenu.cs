@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Linq;
 
 public class StartMenu : MonoBehaviour {
 
@@ -50,18 +51,26 @@ public class StartMenu : MonoBehaviour {
 	}
 
 	public void OnNextPressed() {
-		addPlayerToGameProperties(playerOneCanvas);
-		switchCanvas(playerTwoCanvas);
+		if (addPlayerToGameProperties(playerOneCanvas))
+			switchCanvas(playerTwoCanvas);
 	}
 
-	private void addPlayerToGameProperties(Canvas playerCanvas) {
+	private bool addPlayerToGameProperties(Canvas playerCanvas) {
 		InputField inputName = (InputField) playerCanvas.transform.Find("InputName").GetComponent<InputField>();
-		GameProperties.PlayerModels.Add(new PlayerModel(inputName.text, 0));
+		ToggleGroup raceGroup = playerCanvas.transform.Find("Race").GetComponent<ToggleGroup>();
+		Toggle activeRace = raceGroup.ActiveToggles().FirstOrDefault();
+
+		if (activeRace.name != "" && inputName.text != "") {
+			GameProperties.PlayerModels.Add(new PlayerModel(inputName.text, activeRace.name));
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public void OnPlayPressed() {
-		addPlayerToGameProperties(playerTwoCanvas);
-		Application.LoadLevel(1);
+		if (addPlayerToGameProperties(playerTwoCanvas))
+			Application.LoadLevel(1);
 	}
 
 	private void switchCanvas(Canvas newCanvas) {

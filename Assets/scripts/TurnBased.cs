@@ -26,8 +26,8 @@ public class TurnBased : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		if (GameProperties.PlayerModels.Count == 0) {
-			GameProperties.PlayerModels.Add(new PlayerModel("Markus", 0));
-			GameProperties.PlayerModels.Add(new PlayerModel("Bertha", 0	));
+			GameProperties.PlayerModels.Add(new PlayerModel("Markus", "Chameleon"));
+			GameProperties.PlayerModels.Add(new PlayerModel("Bertha", "Chameleon"));
 		}
 		planets = GameObject.FindGameObjectsWithTag("Planet");
 
