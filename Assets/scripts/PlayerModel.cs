@@ -4,6 +4,9 @@ using System.Collections;
 public class PlayerModel {
 	private string _name;
 	private int _race;
+	public Player component;
+
+	public ArrayList characters;
 
 	public PlayerModel(string name, int race) {
 		_name = name;

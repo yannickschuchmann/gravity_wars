@@ -3,13 +3,10 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-	public string playerName = "";
 	public int race = 0;
 	public bool active = false;
 
-	public GameObject racePrefab0;
-	public GameObject racePrefab1;
-	public GameObject racePrefab2;
+	public PlayerModel model;
 
 	public bool isInitialized = false;
 

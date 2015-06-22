@@ -42,10 +42,12 @@ public class TurnBased : MonoBehaviour {
 			player.transform.parent = transform;
 			player.transform.localPosition = new Vector3(2.0f, 0, 0);
 			Player playerScript = player.GetComponent<Player>();
-			playerScript.playerName = pl.getName();
+			playerScript.model = pl;
 			playerScript.race = pl.getRace();
 			Players.Add(playerScript);
-			
+
+			pl.component = playerScript;
+
 			SpawnCharacters(player);
 		}
 	}
