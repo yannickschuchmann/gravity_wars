@@ -14,7 +14,6 @@ public class Bullet : MonoBehaviour {
 		LifeTime -= Time.deltaTime;
 
 		if (LifeTime <= 0) Destroy(gameObject);
-		Debug.Log (LifeTime);
 
 		Vector3 direction = GetComponent<Rigidbody2D>().velocity;
 		float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
