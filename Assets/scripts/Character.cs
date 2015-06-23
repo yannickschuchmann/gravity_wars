@@ -23,6 +23,7 @@ public class Character : MonoBehaviour {
 	private float faceDirection = 1;
 
 	private TurnBased gameController;
+	public Player player;
 
 	private float shootLoading = 0;
 
@@ -54,7 +55,7 @@ public class Character : MonoBehaviour {
 		camera.transform.position = new Vector3(transform.position.x, transform.position.y, camera.transform.position.z);
 	}
 
-	void Controls() {
+	private void Controls() {
 		// get input and limit to maxSpeed
 		float move = Input.GetAxis("Horizontal") * acceleration;
 		rigid.AddRelativeForce(new Vector2(move,0));
@@ -77,6 +78,7 @@ public class Character : MonoBehaviour {
 			
 			GameObject shoot = Instantiate(shootPrefab, transform.position, Quaternion.identity) as GameObject;
 			//shoot.transform.parent = transform.parent;
+			shoot.GetComponent<Bullet>().spawnedFrom = this.gameObject;
 			Rigidbody2D shootRigid = shoot.GetComponent<Rigidbody2D>();
 			shootRigid.AddRelativeForce(shootLoading * -shootDirection);
 			shootLoading = 0;
@@ -92,6 +94,12 @@ public class Character : MonoBehaviour {
 		//drawFlightPath(transform.position, crossHair.transform.position);
 	}
 
+	public void onDamage(int hitPoints) {
+		hp -= hitPoints;
+
+		if (hp <= 0) player.characterDestroyed(this);
+	}
+
 	public void SetActive() {
 		this.active = true;
 	}
@@ -100,7 +108,7 @@ public class Character : MonoBehaviour {
 		this.active = false;
 	}
 
-	void drawFlightPath(Vector2 startPos, Vector2 startVelocity) {
+	private void drawFlightPath(Vector2 startPos, Vector2 startVelocity) {
 		LineRenderer line = trajectory.GetComponent<LineRenderer>();
 		line.SetPosition(0, startPos);
 		line.SetPosition(1, startVelocity);

@@ -10,10 +10,11 @@ public class GameGUI : MonoBehaviour {
 
 	private GameObject[] playerGUIs;
 	private bool drawed = false;
+	private TurnBased gameController;
 
 	// Use this for initialization
 	void Start () {
-
+		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<TurnBased>();
 	}
 	
 	// Update is called once per frame
@@ -25,6 +26,8 @@ public class GameGUI : MonoBehaviour {
 			draw();
 			drawed = true;
 		}
+
+		if (gameController.gameOver) GetComponent<Canvas>().enabled = false;
 	}
 
 	void draw() {

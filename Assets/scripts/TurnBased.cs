@@ -14,14 +14,16 @@ public class TurnBased : MonoBehaviour {
 	public GameObject racePrefab1;
 	public GameObject racePrefab2;
 
+	public bool gameOver = false;
 
 	private ArrayList Players = new ArrayList();
 	private int turnIndex = 0;
 	public bool turnActive = false;
-	private bool gameOver = false;
 	private int activePlayerIndex = 0; // set this random on initialization 
 	private int countdown;
 	private int turn;
+
+	private Player lastAlive;
 
 	private GameObject[] planets;
 
@@ -39,6 +41,7 @@ public class TurnBased : MonoBehaviour {
 	}
 
 	void SpawnPlayers() {
+		int i = 0;
 		foreach(PlayerModel pl in GameProperties.PlayerModels) {
 			GameObject player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
 			player.transform.parent = transform;
@@ -48,9 +51,12 @@ public class TurnBased : MonoBehaviour {
 			playerScript.race = pl.getRace();
 			Players.Add(playerScript);
 
+			pl.playerIndex = i;
+
 			pl.component = playerScript;
 
 			SpawnCharacters(player);
+			i++;
 		}
 	}
 
@@ -83,6 +89,7 @@ public class TurnBased : MonoBehaviour {
 			character.transform.position = planets[randomPlanet].transform.position + positionOnPlanet;
 			Character characterScript = character.GetComponent<Character>();
 			playerScript.Characters.Add(characterScript);
+			characterScript.player = playerScript;
 		}
 	}
 
@@ -100,7 +107,10 @@ public class TurnBased : MonoBehaviour {
 	int CountAlive() {
 		int sum = 0;
 		foreach (Player player in Players) {
-			if (player.Alive()) sum++;
+			if (player.Alive()) {
+				sum++;
+				lastAlive = player;
+			}
 		}
 		return sum;
 	}
@@ -175,7 +185,11 @@ public class TurnBased : MonoBehaviour {
 	void Update () {
 		if (this.CountAlive() == 1) {
 			this.gameOver = true;
-			Debug.Log("Game over");
+
 		}
+	}
+
+	public PlayerModel getWinner() {
+		return (this.gameOver) ? lastAlive.model : null;
 	}
 }

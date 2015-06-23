@@ -23,13 +23,15 @@ public class Player : MonoBehaviour {
 	}
 
 	public bool Alive() {
-		return true;
-			//this.CountCharacters() > 0 && this.isInitialized;
+		return this.CountCharacters() > 0;
 	}
 
 	public void SetActive() {
 		if (Characters.Count <= 0) return;
 		this.active = true;
+		activeCharacterIndex = (activeCharacterIndex + 1 >= Characters.Count) 
+			? 0 
+				: activeCharacterIndex + 1;
 		Character activeCharacter = (Character) Characters[activeCharacterIndex];
 		activeCharacter.SetActive();
 		// TODO highlight player in GUI
@@ -39,13 +41,15 @@ public class Player : MonoBehaviour {
 		this.active = false;
 		Character activeCharacter = (Character) Characters[activeCharacterIndex];
 		activeCharacter.SetInactive();
-		activeCharacterIndex = (activeCharacterIndex + 1 >= Characters.Count) 
-			? 0 
-			: activeCharacterIndex + 1;
 	}
 
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	public void characterDestroyed(Character character) {
+		Characters.Remove(character);
+		Destroy(character.gameObject);
 	}
 }

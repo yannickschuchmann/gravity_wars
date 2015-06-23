@@ -7,6 +7,8 @@ public class PlayerModel {
 
 	public Player component;
 
+	public int playerIndex = 0;
+
 	public ArrayList characters;
 
 	public PlayerModel(string name, string race) {
