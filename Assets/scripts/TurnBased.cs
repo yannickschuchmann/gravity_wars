@@ -31,7 +31,7 @@ public class TurnBased : MonoBehaviour {
 	void Start () {
 		if (GameProperties.PlayerModels.Count == 0) {
 			GameProperties.PlayerModels.Add(new PlayerModel("Markus", "Chameleon"));
-			GameProperties.PlayerModels.Add(new PlayerModel("Bertha", "Squirrel"));
+			GameProperties.PlayerModels.Add(new PlayerModel("Bertha", "Turtle"));
 		}
 		planets = GameObject.FindGameObjectsWithTag("Planet");
 
