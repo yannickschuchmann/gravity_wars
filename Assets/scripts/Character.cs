@@ -66,7 +66,8 @@ public class Character : MonoBehaviour {
 		float move = Input.GetAxis("Horizontal") * acceleration;
 		rigid.AddRelativeForce(new Vector2(move,0));
 
-		animator.SetFloat("moving", Mathf.Abs(move));
+		if (animator != null)
+			animator.SetFloat("moving", Mathf.Abs(move));
 
 		// flip to right side
 		faceDirection = (move == 0) ? faceDirection : (move < 0) ? 1 : -1;

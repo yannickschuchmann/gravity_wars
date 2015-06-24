@@ -7,6 +7,8 @@ public class StartMenu : MonoBehaviour {
 
 	public Canvas playerOneCanvas;
 	public Canvas playerTwoCanvas;
+	public Canvas levelCanvas;
+	public Canvas amountCanvas;
 	public Canvas optionsCanvas;
 	public Canvas creditsCanvas;
 	public Slider volumeSlider;
@@ -14,15 +16,26 @@ public class StartMenu : MonoBehaviour {
 	private Canvas activeCanvas;
 	private float volSliderValue = 0.8f;
 
+	private InputField amountInput;
+
+	private int LevelNumber = 1;
+
 	// Use this for initialization
 	void Start () {
 		playerOneCanvas = playerOneCanvas.GetComponent<Canvas>();
 		playerTwoCanvas = playerTwoCanvas.GetComponent<Canvas>();
+		levelCanvas = levelCanvas.GetComponent<Canvas>();
+		amountCanvas = amountCanvas.GetComponent<Canvas>();
 		optionsCanvas = optionsCanvas.GetComponent<Canvas>();
 		creditsCanvas = creditsCanvas.GetComponent<Canvas>();
 
+		amountInput = amountCanvas.transform.Find("Amount").GetComponent<InputField>();
+		amountInput.text = GameProperties.AmountCharacters.ToString();
+
 		playerOneCanvas.enabled = false;
 		playerTwoCanvas.enabled = false;
+		levelCanvas.enabled = false;
+		amountCanvas.enabled = false;
 		optionsCanvas.enabled = false;
 		creditsCanvas.enabled = false;
 
@@ -50,9 +63,39 @@ public class StartMenu : MonoBehaviour {
 		switchCanvas(playerOneCanvas);
 	}
 
-	public void OnNextPressed() {
+	public void OnToTwoPressed() {
 		if (addPlayerToGameProperties(playerOneCanvas))
 			switchCanvas(playerTwoCanvas);
+	}
+
+	public void OnToLevelPressed() {
+		if (addPlayerToGameProperties(playerTwoCanvas))
+			switchCanvas(levelCanvas);
+	}
+
+	public void OnToAmountPressed() {
+		// add levels
+		ToggleGroup levelGroup = levelCanvas.transform.Find("Level").GetComponent<ToggleGroup>();
+		Toggle activeLevel = levelGroup.ActiveToggles().FirstOrDefault();
+
+		switch (activeLevel.name)
+		{
+		case "First":
+			LevelNumber = 1;
+			break;
+		case "Second":
+			LevelNumber = 2;
+			break;
+		case "Third":
+			LevelNumber = 3;
+			break;
+		default:
+			LevelNumber = 1;
+			break;
+		}
+
+		if (LevelNumber != null)
+			switchCanvas(amountCanvas);
 	}
 
 	private bool addPlayerToGameProperties(Canvas playerCanvas) {
@@ -69,8 +112,12 @@ public class StartMenu : MonoBehaviour {
 	}
 
 	public void OnPlayPressed() {
-		if (addPlayerToGameProperties(playerTwoCanvas))
-			Application.LoadLevel(1);
+		int amount = int.Parse(amountInput.text);
+
+		if (amount != null) {
+			GameProperties.AmountCharacters = amount;
+			Application.LoadLevel(LevelNumber);
+		}
 	}
 
 	private void switchCanvas(Canvas newCanvas) {
