@@ -69,19 +69,22 @@ public class Character : MonoBehaviour {
 			rigid.AddRelativeForce(new Vector2(0, jumpPower * 100));
 		}
 		
-		if (Input.GetButton("Fire1")) {
+		/*if (Input.GetButton("Fire1")) {
 			shootLoading++;
-		}
+		}*/
 		
-		if (Input.GetButtonUp("Fire1")) {
+		if (Input.GetButtonDown("Fire1")) {
+			shootLoading = 10f;
+
 			Vector2 shootDirection = transform.position - crossHair.transform.position;
 			
 			GameObject shoot = Instantiate(shootPrefab, transform.position, Quaternion.identity) as GameObject;
-			//shoot.transform.parent = transform.parent;
+
 			shoot.GetComponent<Bullet>().spawnedFrom = this.gameObject;
+
 			Rigidbody2D shootRigid = shoot.GetComponent<Rigidbody2D>();
 			shootRigid.AddRelativeForce(shootLoading * -shootDirection);
-			shootLoading = 0;
+			//shootLoading = 0;
 		}
 		
 		// update crosshair position
