@@ -20,10 +20,12 @@ public class Character : MonoBehaviour {
 
 	private Rigidbody2D rigid;
 	private bool isGrounded;
-	private float faceDirection = 1;
+	private float faceDirection = -1;
 
 	private TurnBased gameController;
 	public Player player;
+
+	private Animator animator;
 
 	private float shootLoading = 0;
 
@@ -36,12 +38,16 @@ public class Character : MonoBehaviour {
 
 		crossHair = Instantiate(crossHairPrefab, Vector3.zero, Quaternion.identity) as GameObject;
 		crossHair.transform.parent = transform;
-		crossHair.transform.localPosition = new Vector3(2.0f, 0, 0);
+		crossHair.transform.localPosition = new Vector3(-2.0f, 0, 0);
+
+		animator = GetComponent<Animator>();
 	}
 
 	// Update is called once per frame
 	void FixedUpdate () {
 		crossHair.GetComponent<Renderer>().enabled = this.active;
+
+		Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
 
 		if (!this.active) return;
 
@@ -59,9 +65,11 @@ public class Character : MonoBehaviour {
 		// get input and limit to maxSpeed
 		float move = Input.GetAxis("Horizontal") * acceleration;
 		rigid.AddRelativeForce(new Vector2(move,0));
-		
+
+		animator.SetFloat("moving", Mathf.Abs(move));
+
 		// flip to right side
-		faceDirection = (move == 0) ? faceDirection : (move > 0) ? 1 : -1;
+		faceDirection = (move == 0) ? faceDirection : (move < 0) ? 1 : -1;
 		transform.localScale = new Vector2(faceDirection, 1);
 		
 		// jumping
@@ -90,7 +98,7 @@ public class Character : MonoBehaviour {
 		// update crosshair position
 		crossHairAngle = 
 			Mathf.Min(180, Mathf.Max(0, crossHairAngle - crossHairAcceleration * Input.GetAxis("Vertical")));
-		float crossHairRad = crossHairAngle / 180 * Mathf.PI;
+		float crossHairRad = - crossHairAngle / 180 * Mathf.PI;
 		crossHair.transform.localPosition = 
 			crossHairDistance * new Vector3(Mathf.Sin(crossHairRad), Mathf.Cos(crossHairRad));
 		
