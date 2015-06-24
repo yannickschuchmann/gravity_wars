@@ -10,6 +10,8 @@ public class CameraControls : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		GetComponent<Camera>().orthographicSize += Input.GetAxis("Mouse ScrollWheel");
+		Camera cam = GetComponent<Camera>();
+		float zoom = Mathf.Max(3, Mathf.Min(12, cam.orthographicSize + Input.GetAxis("Mouse ScrollWheel")));
+		cam.orthographicSize = zoom;
 	}
 }
